@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Iogurte</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    input, select, button {
+      padding: 8px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    .ingrediente-item {
+      margin-bottom: 10px;
+    }
+    .resultado {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Calculadora de Preço do Iogurte</h2>
+
+  <div class="ingrediente-item">
+    <input type="text" id="nome" placeholder="Nome do ingrediente">
+    <select id="unidade">
+      <option value="g">g</option>
+      <option value="ml">ml</option>
+    </select>
+    <input type="number" id="preco" placeholder="Preço por unidade (R$)">
+    <input type="number" id="quantidade" placeholder="Quantidade usada">
+    <button onclick="adicionarIngrediente()">Adicionar ingrediente</button>
+  </div>
+
+  <ul id="lista-ingredientes"></ul>
+
+  <hr>
+
+  <label>Tempo de uso do gás (em minutos):</label>
+  <input type="number" id="tempoGas" placeholder="Ex: 20">
+
+  <label>Preço do botijão de gás cheio (13kg):</label>
+  <input type="number" id="precoGas" placeholder="Ex: 120">
+
+  <label>Margem de lucro desejada (%):</label>
+  <input type="number" id="margemLucro" placeholder="Ex: 50">
+
+  <button onclick="calcular()">Calcular Preço de Venda</button>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    const ingredientes = [];
+
+    function adicionarIngrediente() {
+      const nome = document.getElementById('nome').value;
+      const unidade = document.getElementById('unidade').value;
+      const preco = parseFloat(document.getElementById('preco').value);
+      const quantidade = parseFloat(document.getElementById('quantidade').value);
+
+      if (!nome || isNaN(preco) || isNaN(quantidade)) {
+        alert("Preencha todos os campos corretamente.");
+        return;
+      }
+
+      const custo = preco * quantidade;
+      ingredientes.push({ nome, unidade, preco, quantidade, custo });
+
+      const lista = document.getElementById('lista-ingredientes');
+      const item = document.createElement('li');
+      item.textContent = `${nome} (${quantidade}${unidade}) - R$ ${custo.toFixed(2)}`;
+      lista.appendChild(item);
+
+      document.getElementById('nome').value = '';
+      document.getElementById('preco').value = '';
+      document.getElementById('quantidade').value = '';
+    }
+
+    function calcular() {
+      const tempoGas = parseFloat(document.getElementById('tempoGas').value);
+      const precoGas = parseFloat(document.getElementById('precoGas').value);
+      const margemLucro = parseFloat(document.getElementById('margemLucro').value);
+
+      if (isNaN(tempoGas) || isNaN(precoGas) || isNaN(margemLucro)) {
+        alert("Preencha os campos de gás e margem corretamente.");
+        return;
+      }
+
+      const custoIngredientes = ingredientes.reduce((total, ing) => total + ing.custo, 0);
+
+      // 300g de gás por hora = 100g em 20 minutos
+      const consumoGasGramas = (300 / 60) * tempoGas;
+      const porcentagemGasto = consumoGasGramas / 13000;
+      const custoGas = precoGas * porcentagemGasto;
+
+      const custoTotal = custoIngredientes + custoGas;
+      const precoVenda = custoTotal * (1 + margemLucro / 100);
+
+      const resultado = document.getElementById('resultado');
+      resultado.innerHTML = `
+        <p><strong>Custo dos ingredientes:</strong> R$ ${custoIngredientes.toFixed(2)}</p>
+        <p><strong>Custo do gás:</strong> R$ ${custoGas.toFixed(2)} (≈ ${porcentagemGasto.toFixed(2)}% do botijão)</p>
+        <p><strong>Custo total:</strong> R$ ${custoTotal.toFixed(2)}</p>
+        <p><strong>Preço de venda sugerido:</strong> <span style="color: green; font-size: 1.3em;">R$ ${precoVenda.toFixed(2)}</span></p>
+      `;
+    }
+  </script>
+</body>
+</html>
