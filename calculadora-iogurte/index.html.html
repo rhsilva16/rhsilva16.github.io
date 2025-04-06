@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Iogurte</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Calculadora de Preço do Iogurte</h2>
+
+  <div class="ingrediente-item">
+    <input type="text" id="nome" placeholder="Nome do ingrediente">
+    <select id="tipo">
+      <option value="solido">Sólido (kg/g)</option>
+      <option value="liquido">Líquido (L/ml)</option>
+    </select>
+    <input type="number" id="precoUnidade" placeholder="Preço por KG ou por L (R$)">
+    <input type="number" id="quantidadeUsada" placeholder="Quantidade usada em g ou ml">
+    <button onclick="adicionarIngrediente()">Adicionar ingrediente</button>
+  </div>
+
+  <ul id="lista-ingredientes"></ul>
+
+  <hr>
+
+  <label>Tempo de uso do gás (em minutos):</label>
+  <input type="number" id="tempoGas" placeholder="Ex: 20">
+
+  <label>Preço do botijão de gás cheio (13kg):</label>
+  <input type="number" id="precoGas" placeholder="Ex: 120">
+
+  <label>Margem de lucro desejada (%):</label>
+  <input type="number" id="margemLucro" placeholder="Ex: 50">
+
+  <button onclick="calcular()">Calcular Preço de Venda</button>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
